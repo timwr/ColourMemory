@@ -6,13 +6,13 @@ import java.util.Random;
 
 public class PuzzleController {
 
-    private static final int NUM_PIECES = 16;
+    private static final int NUM_PIECES = 2;
     private static final int NO_SELECTION = -1;
 
     private int selection = NO_SELECTION;
     private int secondselection = NO_SELECTION;
     private int score = 0;
-    private Puzzle[] puzzleItems;
+    private Puzzle[] puzzleItems = new Puzzle[NUM_PIECES];
     private PuzzleListener listener;
     private Handler showHandler = new Handler();
     private Runnable showItems = new Runnable() {
@@ -26,15 +26,28 @@ public class PuzzleController {
         resetPuzzle();
     }
 
-    private void resetPuzzle() {
-        puzzleItems = new Puzzle[NUM_PIECES];
+    public void resetPuzzle() {
+        score = 0;
+        selection = NO_SELECTION;
+        secondselection = NO_SELECTION;
+
         // Create unshuffled puzzle
+        int type = 1;
         for (int p = 0; p < puzzleItems.length; p++) {
             puzzleItems[p] = new Puzzle();
-            puzzleItems[p].type = 1 + p % Puzzle.TYPE_MAX;
+            puzzleItems[p].type = type;
+            if (p % 2 == 1) {
+                type++;
+                if (type > Puzzle.TYPE_MAX) {
+                    type = 1;
+                }
+            }
         }
-
         shuffleArray(puzzleItems);
+        if (listener != null) {
+            listener.updatePuzzle();
+            listener.updateScore();
+        }
     }
 
     // Implementing Fisher–Yates shuffle
@@ -86,7 +99,7 @@ public class PuzzleController {
         if (puzzleItems[selection].type == puzzleItems[secondselection].type) {
             puzzleItems[selection].removed = true;
             puzzleItems[secondselection].removed = true;
-            score++;
+            score += 2;
         } else {
             puzzleItems[selection].revealed = false;
             puzzleItems[secondselection].revealed = false;
@@ -97,7 +110,7 @@ public class PuzzleController {
         secondselection = NO_SELECTION;
         if (listener != null) {
             listener.updatePuzzle();
-            listener.updateScore(score);
+            listener.updateScore();
         }
     }
 
@@ -105,9 +118,22 @@ public class PuzzleController {
         this.listener = listener;
     }
 
+    public int getScore() {
+        return score;
+    }
+
+    public boolean isComplete() {
+        for (Puzzle puzzle : puzzleItems) {
+            if (!puzzle.removed) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public interface PuzzleListener {
         void updatePuzzle();
-        void updateScore(int score);
+        void updateScore();
     }
 
 }

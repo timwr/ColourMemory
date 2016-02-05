@@ -27,6 +27,7 @@
 
         <Button
             android:text="High Scores"
+            android:onClick="highScores"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -34,9 +35,8 @@
 
     <GridView
         android:id="@+id/puzzle_grid"
-        android:numColumns="auto_fit"
+        android:numColumns="4"
         android:gravity="center"
-        android:columnWidth="100dp"
         android:stretchMode="columnWidth"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
