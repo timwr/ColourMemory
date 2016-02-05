@@ -9,6 +9,9 @@ import java.util.List;
 
 public class ScoreModel  {
 
+    private static final String NUM_SCORES = "numScores";
+    private static final String SCORES = "scores";
+
     private static final int MAX_SCORES = 10;
     private List<Pair<String,Integer>> scores;
 
@@ -17,8 +20,8 @@ public class ScoreModel  {
     }
 
     public void loadSync(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("scores", Context.MODE_PRIVATE);
-        int numScores = sharedPreferences.getInt("numScores", 0);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SCORES, Context.MODE_PRIVATE);
+        int numScores = sharedPreferences.getInt(NUM_SCORES, 0);
         scores = new ArrayList<>();
         for (int l = 0; l < numScores; l++) {
             String name = sharedPreferences.getString(ScoreActivity.NAME + l, null);
@@ -28,9 +31,9 @@ public class ScoreModel  {
     }
 
     public void saveScores(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("scores", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SCORES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("numScores", scores.size());
+        editor.putInt(NUM_SCORES, scores.size());
         for (int l = 0; l < scores.size(); l++) {
             editor.putString(ScoreActivity.NAME + l, scores.get(l).first);
             editor.putInt(ScoreActivity.SCORE + l, scores.get(l).second);

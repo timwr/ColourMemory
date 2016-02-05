@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class PuzzleController {
 
-    private static final int NUM_PIECES = 2;
+    private static final int NUM_PIECES = 16;
     private static final int NO_SELECTION = -1;
 
     private int selection = NO_SELECTION;
